@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-poppins: 'Poppins', sans-serif;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-poppins), sans-serif;
+    background-color: #FDFAF4;
+    color: #2C1A0E;
+  }
+
+  ::selection {
+    background-color: #8B0024;
+    color: white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #FAF4E8;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #C9933A;
+    border-radius: 3px;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-maroon-700 text-white px-6 py-3 rounded-xl font-semibold hover:bg-maroon-800 transition-all duration-200 shadow-card hover:shadow-card-hover;
+  }
+
+  .btn-secondary {
+    @apply bg-gold-500 text-brown-800 px-6 py-3 rounded-xl font-semibold hover:bg-gold-400 transition-all duration-200 shadow-card;
+  }
+
+  .btn-outline {
+    @apply border-2 border-maroon-700 text-maroon-700 px-6 py-3 rounded-xl font-semibold hover:bg-maroon-700 hover:text-white transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-card hover:shadow-card-hover transition-all duration-300;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-serif font-bold text-brown-800 leading-tight;
+  }
+
+  .section-subtitle {
+    @apply text-gold-500 font-semibold text-sm tracking-widest uppercase;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 border border-cream-200 rounded-xl bg-cream-50 text-brown-800 placeholder-brown-400 focus:outline-none focus:ring-2 focus:ring-maroon-700 focus:border-transparent transition-all duration-200;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+  }
+}
+
+.font-serif {
+  font-family: 'Playfair Display', serif;
+}
