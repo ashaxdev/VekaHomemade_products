@@ -11,7 +11,7 @@ import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/shop/ProductCard";
 import { Product } from "@/types";
 
-const categories = ["All", "Pickles", "Thokku", "Masala"];
+const categories = ["All","ReadyMix", "Thokku", "Masala"];
 
 const sortOptions = [
   { value: "newest", label: "Newest First" },

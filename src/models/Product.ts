@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IProduct extends Document {
   name: string;
-  category: "Pickles" | "Karuvadu" | "Combo Packs";
+  category: "ReadyMix" | "Thokku" | "Masala";
   price: number;
   discountPrice: number;
   weight: string;
@@ -25,7 +25,7 @@ const ProductSchema = new Schema<IProduct>(
     category: {
       type: String,
       required: true,
-      enum: ["Pickles", "Karuvadu", "Combo Packs"],
+      enum: ["ReadyMix", "Thokku", "Masala"],
     },
     price: { type: Number, required: true },
     discountPrice: { type: Number, required: true },

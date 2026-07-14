@@ -7,7 +7,7 @@ import { Upload, X, Loader2, Check } from "lucide-react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { getAuthHeaders } from "@/hooks/useAdminAuth";
 
-const categories = ["Pickles", "Thokku", "Masala"];
+const categories = ["ReadyMix", "Thokku", "Masala"];
 
 interface FormState {
   name: string;
@@ -25,7 +25,7 @@ interface FormState {
 
 const initialForm: FormState = {
   name: "",
-  category: "Pickles",
+  category: "Masala",
   price: "",
   discountPrice: "",
   weight: "",
