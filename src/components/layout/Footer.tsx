@@ -79,28 +79,28 @@ export default function Footer() {
 
                 <li>
                   <Link
-                    href="/shop?category=Pickles"
+                    href="/shop?category=Thokku"
                     className="hover:text-gold-400"
                   >
-                    Pickles
+                    Thokku
                   </Link>
                 </li>
 
                 <li>
                   <Link
-                    href="/shop?category=Karuvadu"
+                    href="/shop?category=Masala"
                     className="hover:text-gold-400"
                   >
-                    Karuvadu
+                    Masala
                   </Link>
                 </li>
 
                 <li>
                   <Link
-                    href="/shop?category=Combo+Packs"
+                    href="/shop?category=ReadyMix"
                     className="hover:text-gold-400"
                   >
-                    Combo Packs
+                    ReadyMix
                   </Link>
                 </li>
               </ul>
@@ -141,7 +141,7 @@ export default function Footer() {
                     className="text-gold-400 mt-1 flex-shrink-0"
                     size={16}
                   />
-                  <span className="break-words">+91 80721 15228</span>
+                  <span className="break-words">+91 63815 13752</span>
                 </li>
 
                 <li className="flex gap-3">
@@ -150,7 +150,7 @@ export default function Footer() {
                     size={16}
                   />
                   <span className="break-words">
-                    hariniganesan00@gmail.com
+                    kalaveluchamy0430@gmail.com
                   </span>
                 </li>
 
@@ -171,13 +171,25 @@ export default function Footer() {
         <div className="border-t border-white/10">
           <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left text-xs md:text-sm text-cream-200">
             <p>
-              © {new Date().getFullYear()} Lakshmi Kai Pakkuvam. All rights
+              © {new Date().getFullYear()} Veka Homemade Products. All rights
               reserved.
             </p>
 
             <p className="flex items-center gap-1">
               Made with
               <Heart size={13} className="text-red-500 fill-red-500" />
+            </p>
+
+            <p>
+              Developed by{" "}
+              <a
+                href="https://nexirasolution.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gold-400 font-medium"
+              >
+                Nexira Solution
+              </a>
             </p>
           </div>
         </div>

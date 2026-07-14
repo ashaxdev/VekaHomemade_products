@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ShoppingCart, Menu, X, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,7 +29,7 @@ export default function Navbar() {
   useEffect(() => {
     const updateCart = () => {
       const cart = JSON.parse(localStorage.getItem("lkp_cart") || "[]");
-      const count = cart.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0);
+      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
       setCartCount(count);
     };
     updateCart();
@@ -48,9 +49,15 @@ export default function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex flex-col leading-tight">
-          <span className="font-serif text-xl font-bold text-brown-800">Veka</span>
-          <span className="text-xs font-semibold tracking-widest text-gold-500 uppercase">Homemade Products</span>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/images/veka-logo.jpeg"
+            alt="Veka Homemade Products"
+            width={1254}
+            height={1254}
+            priority
+            className="h-12 w-auto md:h-14 object-contain"
+          />
         </Link>
 
         {/* Desktop Nav */}

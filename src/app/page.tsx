@@ -21,10 +21,10 @@ export default function HomePage() {
         <FeaturedProducts />
         <BrandPromise />
         <BestSellers />
-        <OfferCTA />
+        {/* <OfferCTA /> */}
         <Testimonials />
-        <InstagramGallery />
-        <Newsletter />
+        {/* <InstagramGallery />
+        <Newsletter /> */}
       </main>
       <Footer />
     </>
