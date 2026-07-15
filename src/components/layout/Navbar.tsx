@@ -14,6 +14,11 @@ const navLinks = [
   { href: "/faq", label: "FAQ" },
 ];
 
+interface CartItem {
+  quantity: number;
+  [key: string]: unknown;
+}
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -28,8 +33,8 @@ export default function Navbar() {
 
   useEffect(() => {
     const updateCart = () => {
-      const cart = JSON.parse(localStorage.getItem("lkp_cart") || "[]");
-      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cart: CartItem[] = JSON.parse(localStorage.getItem("lkp_cart") || "[]");
+      const count = cart.reduce((sum: number, item: CartItem) => sum + item.quantity, 0);
       setCartCount(count);
     };
     updateCart();
