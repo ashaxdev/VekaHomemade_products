@@ -58,7 +58,7 @@ export default function CheckoutPage() {
   }, [router]);
 
   const subtotal = getCartTotal(cart);
-  const deliveryCharge = subtotal >= 499 ? 0 : 49;
+  const deliveryCharge = subtotal >= 0 ? 0 : 0;
   const total = subtotal + deliveryCharge;
 
   const validate = (): boolean => {
