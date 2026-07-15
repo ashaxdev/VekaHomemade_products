@@ -160,7 +160,7 @@ export default function Footer() {
                     size={16}
                   />
                   <span className="break-words">
-                    Burmanagar, Ennore, Chennai
+                    Palani
                   </span>
                 </li>
               </ul>
