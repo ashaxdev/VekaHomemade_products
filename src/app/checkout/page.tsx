@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Script from "next/script";
 import { motion } from "framer-motion";
-import { Truck, Smartphone, Loader2 } from "lucide-react";
+import { Smartphone, Loader2 } from "lucide-react";
 import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -18,7 +18,6 @@ interface FormData {
   address: string;
   city: string;
   pincode: string;
-  paymentMethod: "COD" | "ONLINE";
   notes: string;
 }
 
@@ -29,12 +28,9 @@ const initialForm: FormData = {
   address: "",
   city: "",
   pincode: "",
-  paymentMethod: "COD",
   notes: "",
 };
 
-// Minimal shape of the Razorpay checkout options we use.
-// The actual `window.Razorpay` constructor comes from the checkout.js script.
 declare global {
   interface Window {
     Razorpay: any;
@@ -58,7 +54,7 @@ export default function CheckoutPage() {
   }, [router]);
 
   const subtotal = getCartTotal(cart);
-  const deliveryCharge = subtotal >= 0 ? 0 : 0;
+  const deliveryCharge = 0;
   const total = subtotal + deliveryCharge;
 
   const validate = (): boolean => {
@@ -78,8 +74,7 @@ export default function CheckoutPage() {
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
 
-  // Places the order in your own backend once payment (if any) is settled.
-  const placeOrder = async (paymentInfo?: {
+  const placeOrder = async (paymentInfo: {
     razorpay_order_id: string;
     razorpay_payment_id: string;
   }) => {
@@ -102,15 +97,11 @@ export default function CheckoutPage() {
       subtotal,
       deliveryCharge,
       total,
-      paymentMethod: form.paymentMethod,
+      paymentMethod: "ONLINE",
+      razorpayOrderId: paymentInfo.razorpay_order_id,
+      razorpayPaymentId: paymentInfo.razorpay_payment_id,
+      paymentStatus: "Paid",
       notes: form.notes,
-      ...(paymentInfo
-        ? {
-            razorpayOrderId: paymentInfo.razorpay_order_id,
-            razorpayPaymentId: paymentInfo.razorpay_payment_id,
-            paymentStatus: "PAID",
-          }
-        : { paymentStatus: form.paymentMethod === "COD" ? "PENDING" : "PENDING" }),
     };
 
     const res = await fetch("/api/orders", {
@@ -124,7 +115,11 @@ export default function CheckoutPage() {
       clearCart();
       router.push(`/order-success?orderNumber=${data.order.orderNumber}`);
     } else {
-      alert("Failed to place order. Please try again.");
+      console.error("Order creation failed:", data.error);
+      alert(
+        "Your payment was successful, but we couldn't save your order automatically. Please contact support with your payment ID: " +
+          paymentInfo.razorpay_payment_id
+      );
     }
   };
 
@@ -136,7 +131,6 @@ export default function CheckoutPage() {
     }
 
     try {
-      // 1. Ask our backend to create a Razorpay order for this amount.
       const createRes = await fetch("/api/razorpay/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -150,7 +144,6 @@ export default function CheckoutPage() {
         return;
       }
 
-      // 2. Open the Razorpay checkout modal.
       const options = {
         key: createData.keyId,
         amount: createData.order.amount,
@@ -169,12 +162,11 @@ export default function CheckoutPage() {
           razorpay_payment_id: string;
           razorpay_signature: string;
         }) => {
-          // 3. Verify the payment signature on our server before fulfilling the order.
           try {
             const verifyRes = await fetch("/api/razorpay/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(response),
+              body: JSON.stringify({ ...response, amount: total }),
             });
             const verifyData = await verifyRes.json();
 
@@ -184,18 +176,24 @@ export default function CheckoutPage() {
                 razorpay_payment_id: response.razorpay_payment_id,
               });
             } else {
-              alert("Payment verification failed. Please contact support if money was deducted.");
+              console.error("Verification failed:", verifyData.error);
+              alert(
+                "Payment verification failed. If money was deducted, please contact support with payment ID: " +
+                  response.razorpay_payment_id
+              );
             }
           } catch (err) {
             console.error(err);
-            alert("Something went wrong verifying your payment.");
+            alert(
+              "Something went wrong verifying your payment. If money was deducted, please contact support with payment ID: " +
+                response.razorpay_payment_id
+            );
           } finally {
             setSubmitting(false);
           }
         },
         modal: {
           ondismiss: () => {
-            // User closed the checkout modal without paying
             setSubmitting(false);
           },
         },
@@ -218,21 +216,7 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (!validate()) return;
     setSubmitting(true);
-
-    if (form.paymentMethod === "ONLINE") {
-      await payWithRazorpay();
-      return;
-    }
-
-    // Cash on Delivery — place order directly, no payment step.
-    try {
-      await placeOrder();
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
+    await payWithRazorpay();
   };
 
   if (!mounted || cart.length === 0) return null;
@@ -254,7 +238,6 @@ export default function CheckoutPage() {
 
         <section className="py-10">
           <form onSubmit={handleSubmit} className="max-w-7xl mx-auto px-4 grid lg:grid-cols-3 gap-8">
-            {/* Form */}
             <div className="lg:col-span-2 space-y-6">
               <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="card p-6">
                 <h3 className="font-semibold text-lg text-brown-800 mb-5">Delivery Information</h3>
@@ -330,39 +313,16 @@ export default function CheckoutPage() {
 
               <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="card p-6">
                 <h3 className="font-semibold text-lg text-brown-800 mb-5">Payment Method</h3>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <button
-                    type="button"
-                    onClick={() => handleChange("paymentMethod", "COD")}
-                    className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
-                      form.paymentMethod === "COD" ? "border-maroon-700 bg-maroon-700/5" : "border-cream-200"
-                    }`}
-                  >
-                    <Truck size={22} className={form.paymentMethod === "COD" ? "text-maroon-700" : "text-brown-400"} />
-                    <div className="text-left">
-                      <p className="font-medium text-brown-800">Cash on Delivery</p>
-                      <p className="text-xs text-brown-500">Pay when you receive</p>
-                    </div>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleChange("paymentMethod", "ONLINE")}
-                    className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
-                      form.paymentMethod === "ONLINE" ? "border-maroon-700 bg-maroon-700/5" : "border-cream-200"
-                    }`}
-                  >
-                    <Smartphone size={22} className={form.paymentMethod === "ONLINE" ? "text-maroon-700" : "text-brown-400"} />
-                    <div className="text-left">
-                      <p className="font-medium text-brown-800">Pay Online</p>
-                      <p className="text-xs text-brown-500">UPI, Cards, Netbanking</p>
-                    </div>
-                  </button>
+                <div className="flex items-center gap-3 p-4 rounded-xl border-2 border-maroon-700 bg-maroon-700/5">
+                  <Smartphone size={22} className="text-maroon-700" />
+                  <div className="text-left">
+                    <p className="font-medium text-brown-800">Pay Online</p>
+                    <p className="text-xs text-brown-500">UPI, Cards, Netbanking</p>
+                  </div>
                 </div>
-                {form.paymentMethod === "ONLINE" && (
-                  <p className="text-xs text-brown-500 mt-4 bg-cream-100 p-3 rounded-lg">
-                    You'll be redirected to a secure Razorpay checkout to complete payment via UPI, card, or netbanking.
-                  </p>
-                )}
+                <p className="text-xs text-brown-500 mt-4 bg-cream-100 p-3 rounded-lg">
+                  You&apos;ll be redirected to a secure Razorpay checkout to complete payment via UPI, card, or netbanking.
+                </p>
               </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="card p-6">
@@ -377,7 +337,6 @@ export default function CheckoutPage() {
               </motion.div>
             </div>
 
-            {/* Order summary */}
             <div className="lg:col-span-1">
               <div className="card p-6 sticky top-24">
                 <h3 className="font-semibold text-lg text-brown-800 mb-5">Order Summary</h3>
@@ -418,13 +377,10 @@ export default function CheckoutPage() {
                 >
                   {submitting ? (
                     <>
-                      <Loader2 size={18} className="animate-spin" />{" "}
-                      {form.paymentMethod === "ONLINE" ? "Processing Payment..." : "Placing Order..."}
+                      <Loader2 size={18} className="animate-spin" /> Processing Payment...
                     </>
-                  ) : form.paymentMethod === "ONLINE" ? (
-                    `Pay ₹${total}`
                   ) : (
-                    "Place Order"
+                    `Pay ₹${total}`
                   )}
                 </button>
               </div>
