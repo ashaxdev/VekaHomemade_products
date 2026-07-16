@@ -33,7 +33,7 @@ export default function CartPage() {
   };
 
   const subtotal = getCartTotal(cart);
-  const deliveryCharge = subtotal >= 499 || subtotal === 0 ? 0 : 0;
+  const deliveryCharge = subtotal >= 499 || subtotal === 0 ? 0 : 49;
   const total = subtotal + deliveryCharge;
 
   if (!mounted) return null;
