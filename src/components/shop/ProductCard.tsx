@@ -65,12 +65,12 @@ export default function ProductCard({ product, index = 0 }: { product: Product; 
             {product.category}
           </span>
           <h3 className="font-semibold text-brown-800 mb-1 line-clamp-1">{product.name}</h3>
-          <div className="flex items-center gap-1 mb-2">
+          {/* <div className="flex items-center gap-1 mb-2">
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={12} className="fill-gold-400 text-gold-400" />
             ))}
             <span className="text-xs text-brown-400 ml-1">(4.8)</span>
-          </div>
+          </div> */}
           <p className="text-xs text-brown-500 mb-3">{product.weight}</p>
           <div className="mt-auto flex items-center justify-between">
             <div className="flex items-baseline gap-2">
