@@ -47,7 +47,7 @@ function OrderSuccessContent() {
           )}
 
           <p className="text-sm text-brown-500 mb-8">
-            We&apos;ll send order updates to your email and mobile number. You can expect delivery within 4-6 business days.
+           You can expect delivery within 4-6 business days.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
