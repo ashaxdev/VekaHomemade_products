@@ -54,7 +54,7 @@ export default function CheckoutPage() {
   }, [router]);
 
   const subtotal = getCartTotal(cart);
-  const deliveryCharge = 0;
+  const deliveryCharge = 60;
   const total = subtotal + deliveryCharge;
 
   const validate = (): boolean => {
@@ -361,7 +361,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between text-brown-600">
                     <span>Delivery</span>
-                    <span>{deliveryCharge === 0 ? "Free" : `₹${deliveryCharge}`}</span>
+                    <span>{deliveryCharge}</span>
                   </div>
                 </div>
                 <div className="border-t border-cream-200 pt-4 mb-6">

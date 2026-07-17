@@ -9,10 +9,10 @@ export default function AnnouncementBar() {
   return (
     <div className="bg-maroon-800 text-white text-xs py-2 px-4 relative">
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-6 flex-wrap">
-        <div className="flex items-center gap-1.5">
+        {/* <div className="flex items-center gap-1.5">
           <Truck size={13} className="text-gold-300" />
           <span>Free delivery on orders above ₹499</span>
-        </div>
+        </div> */}
         <span className="text-maroon-600 hidden md:block">|</span>
         <div className="flex items-center gap-1.5">
           <Phone size={13} className="text-gold-300" />

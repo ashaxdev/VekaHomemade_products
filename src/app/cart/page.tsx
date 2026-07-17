@@ -33,7 +33,7 @@ export default function CartPage() {
   };
 
   const subtotal = getCartTotal(cart);
-  const deliveryCharge = subtotal >= 499 || subtotal === 0 ? 0 : 49;
+  const deliveryCharge = 60;
   const total = subtotal + deliveryCharge;
 
   if (!mounted) return null;
@@ -134,11 +134,11 @@ export default function CartPage() {
                       </div>
                       <div className="flex justify-between text-brown-600">
                         <span>Delivery</span>
-                        <span>{deliveryCharge === 0 ? "Free" : `₹${deliveryCharge}`}</span>
+                        <span>{deliveryCharge}</span>
                       </div>
-                      {deliveryCharge > 0 && (
+                      {/* {deliveryCharge > 0 && (
                         <p className="text-xs text-gold-500">Add ₹{499 - subtotal} more for free delivery</p>
-                      )}
+                      )} */}
                     </div>
                     <div className="border-t border-cream-200 pt-4 mb-6">
                       <div className="flex justify-between font-bold text-brown-800 text-lg">
